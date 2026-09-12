@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -27,14 +27,16 @@ export async function POST(req: Request) {
     const { name, email, password, timezone, dailyCalorieGoal } = parsed.data;
     const normalizedEmail = email.toLowerCase().trim();
 
-    const existing = db.select().from(users).where(eq(users.email, normalizedEmail)).get();
-    if (existing) {
+    await ensureSchema();
+
+    const existingRows = await db.select().from(users).where(eq(users.email, normalizedEmail));
+    if (existingRows[0]) {
       return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const inserted = db
+    const [inserted] = await db
       .insert(users)
       .values({
         name,
@@ -43,8 +45,7 @@ export async function POST(req: Request) {
         timezone: timezone || "UTC",
         dailyCalorieGoal: dailyCalorieGoal || 2000,
       })
-      .returning()
-      .get();
+      .returning();
 
     return NextResponse.json({ id: inserted.id, email: inserted.email }, { status: 201 });
   } catch (err) {

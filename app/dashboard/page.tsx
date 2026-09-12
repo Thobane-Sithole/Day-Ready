@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { tasks, events, meals, users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Navbar from "@/components/Navbar";
@@ -8,18 +8,22 @@ import ProgressRing from "@/components/dashboard/ProgressRing";
 import TaskPanel from "@/components/tasks/TaskPanel";
 import SchedulePanel from "@/components/dashboard/SchedulePanel";
 import NutritionPanel from "@/components/dashboard/NutritionPanel";
-import type { Task, Event, Meal, FoodItem } from "@/lib/types";
+import type { Meal, FoodItem, Task } from "@/lib/types";
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
   const userId = (session.user as { id: string }).id;
 
-  const user = db.select().from(users).where(eq(users.id, userId)).get();
+  await ensureSchema();
 
-  const allTasks = db.select().from(tasks).where(eq(tasks.userId, userId)).all() as Task[];
-  const allEvents = db.select().from(events).where(eq(events.userId, userId)).all() as Event[];
-  const allMealsRaw = db.select().from(meals).where(eq(meals.userId, userId)).all();
+  const [userRows, allTasks, allEvents, allMealsRaw] = await Promise.all([
+    db.select().from(users).where(eq(users.id, userId)),
+    db.select().from(tasks).where(eq(tasks.userId, userId)),
+    db.select().from(events).where(eq(events.userId, userId)),
+    db.select().from(meals).where(eq(meals.userId, userId)),
+  ]);
+  const user = userRows[0];
 
   const now = new Date();
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -72,7 +76,7 @@ export default async function DashboardPage() {
       <div className="container py-4">
         <div className="row g-4">
           <div className="col-lg-4">
-            <TaskPanel initialTasks={allTasks} />
+            <TaskPanel initialTasks={allTasks as Task[]} />
           </div>
           <div className="col-lg-4">
             <SchedulePanel events={todaysEvents} />

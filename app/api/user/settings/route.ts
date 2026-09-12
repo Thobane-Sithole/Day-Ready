@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -20,7 +20,8 @@ export async function GET() {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const userId = (session.user as { id: string }).id;
 
-  const user = db
+  await ensureSchema();
+  const rows = await db
     .select({
       id: users.id,
       name: users.name,
@@ -33,10 +34,9 @@ export async function GET() {
       theme: users.theme,
     })
     .from(users)
-    .where(eq(users.id, userId))
-    .get();
+    .where(eq(users.id, userId));
 
-  return NextResponse.json(user);
+  return NextResponse.json(rows[0]);
 }
 
 export async function PATCH(req: Request) {
@@ -50,7 +50,8 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 400 });
   }
 
-  const updated = db.update(users).set(parsed.data).where(eq(users.id, userId)).returning().get();
+  await ensureSchema();
+  const [updated] = await db.update(users).set(parsed.data).where(eq(users.id, userId)).returning();
   const { passwordHash: _passwordHash, ...safeUser } = updated;
   return NextResponse.json(safeUser);
 }

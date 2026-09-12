@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { tasks } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -18,12 +18,12 @@ export async function GET() {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const userId = (session.user as { id: string }).id;
-  const rows = db
+  await ensureSchema();
+  const rows = await db
     .select()
     .from(tasks)
     .where(eq(tasks.userId, userId))
-    .orderBy(desc(tasks.createdAt))
-    .all();
+    .orderBy(desc(tasks.createdAt));
 
   return NextResponse.json(rows);
 }
@@ -39,7 +39,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 400 });
   }
 
-  const inserted = db
+  await ensureSchema();
+  const [inserted] = await db
     .insert(tasks)
     .values({
       userId,
@@ -49,8 +50,7 @@ export async function POST(req: Request) {
       priority: parsed.data.priority ?? "MEDIUM",
       category: parsed.data.category,
     })
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json(inserted, { status: 201 });
 }

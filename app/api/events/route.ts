@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -19,7 +19,8 @@ export async function GET() {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const userId = (session.user as { id: string }).id;
 
-  const rows = db.select().from(events).where(eq(events.userId, userId)).all();
+  await ensureSchema();
+  const rows = await db.select().from(events).where(eq(events.userId, userId));
   return NextResponse.json(rows);
 }
 
@@ -38,8 +39,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "End time must be after start time" }, { status: 400 });
   }
 
+  await ensureSchema();
+
   // Conflict detection: warn (but still allow) if overlapping.
-  const existingEvents = db.select().from(events).where(eq(events.userId, userId)).all();
+  const existingEvents = await db.select().from(events).where(eq(events.userId, userId));
   const newStart = new Date(parsed.data.startAt).getTime();
   const newEnd = new Date(parsed.data.endAt).getTime();
   const conflict = existingEvents.some((e) => {
@@ -48,7 +51,7 @@ export async function POST(req: Request) {
     return newStart < en && newEnd > s;
   });
 
-  const inserted = db
+  const [inserted] = await db
     .insert(events)
     .values({
       userId,
@@ -59,8 +62,7 @@ export async function POST(req: Request) {
       color: parsed.data.color ?? "#6C63FF",
       reminderMin: parsed.data.reminderMin ?? null,
     })
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ event: inserted, conflict }, { status: 201 });
 }

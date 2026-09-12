@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { meals } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -30,12 +30,12 @@ export async function GET() {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const userId = (session.user as { id: string }).id;
 
-  const rows = db
+  await ensureSchema();
+  const rows = await db
     .select()
     .from(meals)
     .where(eq(meals.userId, userId))
-    .orderBy(desc(meals.loggedAt))
-    .all();
+    .orderBy(desc(meals.loggedAt));
 
   const parsed = rows.map((r) => ({ ...r, items: JSON.parse(r.items) }));
   return NextResponse.json(parsed);
@@ -52,7 +52,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 400 });
   }
 
-  const inserted = db
+  await ensureSchema();
+  const [inserted] = await db
     .insert(meals)
     .values({
       userId,
@@ -65,8 +66,7 @@ export async function POST(req: Request) {
       confidence: parsed.data.confidence,
       notes: parsed.data.notes,
     })
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ ...inserted, items: JSON.parse(inserted.items) }, { status: 201 });
 }

@@ -1,8 +1,8 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, text, integer, boolean } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
-export const users = sqliteTable("users", {
+export const users = pgTable("users", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -13,10 +13,12 @@ export const users = sqliteTable("users", {
   carbsGoalG: integer("carbs_goal_g").notNull().default(250),
   fatGoalG: integer("fat_goal_g").notNull().default(70),
   theme: text("theme").notNull().default("light"),
-  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`now()::text`),
 });
 
-export const tasks = sqliteTable("tasks", {
+export const tasks = pgTable("tasks", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   userId: text("user_id").notNull(),
   title: text("title").notNull(),
@@ -24,13 +26,15 @@ export const tasks = sqliteTable("tasks", {
   dueAt: text("due_at"),
   priority: text("priority").notNull().default("MEDIUM"), // LOW | MEDIUM | HIGH
   category: text("category"),
-  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+  completed: boolean("completed").notNull().default(false),
   completedAt: text("completed_at"),
   sortOrder: integer("sort_order").notNull().default(0),
-  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`now()::text`),
 });
 
-export const events = sqliteTable("events", {
+export const events = pgTable("events", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   userId: text("user_id").notNull(),
   title: text("title").notNull(),
@@ -39,10 +43,12 @@ export const events = sqliteTable("events", {
   endAt: text("end_at").notNull(),
   color: text("color").default("#6C63FF"),
   reminderMin: integer("reminder_min"),
-  createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`now()::text`),
 });
 
-export const meals = sqliteTable("meals", {
+export const meals = pgTable("meals", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   userId: text("user_id").notNull(),
   imageDataUrl: text("image_data_url").notNull(),
@@ -53,5 +59,7 @@ export const meals = sqliteTable("meals", {
   totalFat: integer("total_fat").notNull().default(0),
   confidence: text("confidence").notNull().default("medium"),
   notes: text("notes"),
-  loggedAt: text("logged_at").notNull().default(sql`(current_timestamp)`),
+  loggedAt: text("logged_at")
+    .notNull()
+    .default(sql`now()::text`),
 });

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 
@@ -26,15 +26,16 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 400 });
   }
 
-  const existing = db.select().from(events).where(and(eq(events.id, id), eq(events.userId, userId))).get();
-  if (!existing) return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  await ensureSchema();
 
-  const updated = db
+  const existingRows = await db.select().from(events).where(and(eq(events.id, id), eq(events.userId, userId)));
+  if (!existingRows[0]) return NextResponse.json({ error: "Event not found" }, { status: 404 });
+
+  const [updated] = await db
     .update(events)
     .set(parsed.data)
     .where(and(eq(events.id, id), eq(events.userId, userId)))
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json(updated);
 }
@@ -45,6 +46,7 @@ export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string 
   const userId = (session.user as { id: string }).id;
   const { id } = await ctx.params;
 
-  db.delete(events).where(and(eq(events.id, id), eq(events.userId, userId))).run();
+  await ensureSchema();
+  await db.delete(events).where(and(eq(events.id, id), eq(events.userId, userId)));
   return NextResponse.json({ ok: true });
 }

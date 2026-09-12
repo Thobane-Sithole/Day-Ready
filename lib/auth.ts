@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -22,7 +22,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const password = credentials?.password as string;
         if (!email || !password) return null;
 
-        const user = db.select().from(users).where(eq(users.email, email)).get();
+        await ensureSchema();
+        const rows = await db.select().from(users).where(eq(users.email, email));
+        const user = rows[0];
         if (!user) return null;
 
         const valid = await bcrypt.compare(password, user.passwordHash);

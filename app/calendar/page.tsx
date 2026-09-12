@@ -1,18 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Navbar from "@/components/Navbar";
 import CalendarView from "@/components/calendar/CalendarView";
-import type { Event } from "@/lib/types";
 
 export default async function CalendarPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
   const userId = (session.user as { id: string }).id;
 
-  const allEvents = db.select().from(events).where(eq(events.userId, userId)).all() as Event[];
+  await ensureSchema();
+  const allEvents = await db.select().from(events).where(eq(events.userId, userId));
 
   return (
     <>

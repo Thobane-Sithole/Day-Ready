@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { meals, users } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import Navbar from "@/components/Navbar";
@@ -12,13 +12,13 @@ export default async function NutritionPage() {
   if (!session?.user) redirect("/login");
   const userId = (session.user as { id: string }).id;
 
-  const user = db.select().from(users).where(eq(users.id, userId)).get();
-  const rows = db
-    .select()
-    .from(meals)
-    .where(eq(meals.userId, userId))
-    .orderBy(desc(meals.loggedAt))
-    .all();
+  await ensureSchema();
+
+  const [userRows, rows] = await Promise.all([
+    db.select().from(users).where(eq(users.id, userId)),
+    db.select().from(meals).where(eq(meals.userId, userId)).orderBy(desc(meals.loggedAt)),
+  ]);
+  const user = userRows[0];
 
   const allMeals: Meal[] = rows.map((r) => ({ ...r, items: JSON.parse(r.items) as FoodItem[] }));
 

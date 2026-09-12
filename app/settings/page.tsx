@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db, ensureSchema } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Navbar from "@/components/Navbar";
@@ -11,7 +11,9 @@ export default async function SettingsPage() {
   if (!session?.user) redirect("/login");
   const userId = (session.user as { id: string }).id;
 
-  const user = db.select().from(users).where(eq(users.id, userId)).get();
+  await ensureSchema();
+  const rows = await db.select().from(users).where(eq(users.id, userId));
+  const user = rows[0];
   if (!user) redirect("/login");
 
   return (
