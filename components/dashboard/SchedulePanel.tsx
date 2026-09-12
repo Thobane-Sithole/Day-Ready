@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { CalendarClock } from "lucide-react";
 import type { Event } from "@/lib/types";
 
 export default function SchedulePanel({ events }: { events: Event[] }) {
   const sorted = [...events].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 
   return (
-    <div className="dr-card dr-card--top-marigold h-100">
+    <div className="dr-card dr-card--top-marigold dr-card--interactive h-100">
       <div className="dr-panel-title">
         <span className="dr-panel-title-left">
-          <span className="dr-panel-icon dr-panel-icon--marigold">◷</span>
+          <span className="dr-panel-icon dr-panel-icon--marigold">
+            <CalendarClock size={16} strokeWidth={2.25} />
+          </span>
           Today&apos;s schedule
         </span>
         <Link href="/calendar" className="small fw-normal text-decoration-none">

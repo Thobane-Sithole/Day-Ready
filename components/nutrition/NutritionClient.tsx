@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Camera } from "lucide-react";
 import CameraCapture from "./CameraCapture";
 import AnalysisReview from "./AnalysisReview";
 import MealCard from "./MealCard";
@@ -110,8 +111,9 @@ export default function NutritionClient({
             {todayTotal} <span className="fs-6 text-muted fw-normal">/ {calorieGoal} kcal</span>
           </div>
         </div>
-        <button className="btn btn-primary btn-lg" onClick={() => setStage("capturing")}>
-          📷 Log a meal
+        <button className="btn btn-primary btn-lg d-inline-flex align-items-center gap-2" onClick={() => setStage("capturing")}>
+          <Camera size={20} />
+          Log a meal
         </button>
       </div>
 

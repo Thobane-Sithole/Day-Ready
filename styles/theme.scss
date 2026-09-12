@@ -209,6 +209,33 @@ body {
   box-shadow: 0 10px 24px rgba(18, 33, 61, 0.08);
 }
 
+.dr-card--top-indigo.dr-card--interactive:hover { box-shadow: 0 12px 28px rgba($indigo, 0.18); }
+.dr-card--top-marigold.dr-card--interactive:hover { box-shadow: 0 12px 28px rgba($marigold, 0.22); }
+.dr-card--top-sage.dr-card--interactive:hover { box-shadow: 0 12px 28px rgba($sage, 0.2); }
+
+// Gradient primary buttons — more energy than a flat fill
+.btn-primary {
+  background: linear-gradient(135deg, $marigold 0%, #F2884A 100%);
+  border: none;
+  box-shadow: 0 4px 14px rgba($marigold, 0.35);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, darken($marigold, 4%) 0%, darken(#F2884A, 4%) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba($marigold, 0.42);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, $indigo 0%, $indigo-deep 100%);
+  border: none;
+}
+
 .dr-panel-title {
   font-family: $headings-font-family;
   font-size: 1.2rem;

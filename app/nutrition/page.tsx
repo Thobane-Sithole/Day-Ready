@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db, ensureSchema } from "@/lib/db";
 import { meals, users } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { Flame } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import NutritionClient from "@/components/nutrition/NutritionClient";
 import type { Meal, FoodItem } from "@/lib/types";
@@ -26,7 +27,12 @@ export default async function NutritionPage() {
     <>
       <Navbar userName={session.user.name} />
       <div className="container py-4" style={{ maxWidth: 800 }}>
-        <h1 className="h3 mb-1">Nutrition</h1>
+        <h1 className="h3 mb-1 d-flex align-items-center gap-2">
+          <span className="dr-panel-icon dr-panel-icon--sage">
+            <Flame size={18} strokeWidth={2.25} />
+          </span>
+          Nutrition
+        </h1>
         <p className="text-muted mb-4">Snap a photo of your plate and we&apos;ll estimate the calories.</p>
         <NutritionClient initialMeals={allMeals} calorieGoal={user?.dailyCalorieGoal ?? 2000} />
       </div>

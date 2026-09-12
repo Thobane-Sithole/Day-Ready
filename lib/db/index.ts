@@ -45,12 +45,16 @@ const DDL = `
     carbs_goal_g INTEGER NOT NULL DEFAULT 250,
     fat_goal_g INTEGER NOT NULL DEFAULT 70,
     theme TEXT NOT NULL DEFAULT 'light',
+    reset_token TEXT,
+    reset_token_expires_at TEXT,
     created_at TEXT NOT NULL DEFAULT now()::text
   );
 
   -- Widen existing deployments where password_hash was NOT NULL, so
   -- Google-only accounts (no password) can be created.
   ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
+  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token TEXT;
+  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires_at TEXT;
 
   CREATE TABLE IF NOT EXISTS tasks (
     id TEXT PRIMARY KEY,

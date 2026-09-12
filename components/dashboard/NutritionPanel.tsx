@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { Flame } from "lucide-react";
 import type { Meal } from "@/lib/types";
 
 function NutrientBar({ label, value, goal, color }: { label: string; value: number; goal: number; color: string }) {
@@ -53,10 +54,12 @@ export default function NutritionPanel({
   );
 
   return (
-    <div className="dr-card dr-card--top-sage h-100">
+    <div className="dr-card dr-card--top-sage dr-card--interactive h-100">
       <div className="dr-panel-title">
         <span className="dr-panel-title-left">
-          <span className="dr-panel-icon dr-panel-icon--sage">🔥</span>
+          <span className="dr-panel-icon dr-panel-icon--sage">
+            <Flame size={16} strokeWidth={2.25} />
+          </span>
           Nutrition today
         </span>
         <Link href="/nutrition" className="small fw-normal text-decoration-none">

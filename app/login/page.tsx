@@ -50,7 +50,12 @@ export default function LoginPage() {
             />
           </div>
           <div className="mb-4">
-            <label className="form-label small fw-semibold">Password</label>
+            <div className="d-flex justify-content-between align-items-center">
+              <label className="form-label small fw-semibold mb-0">Password</label>
+              <Link href="/forgot-password" className="small text-decoration-none">
+                Forgot password?
+              </Link>
+            </div>
             <input
               type="password"
               className="form-control"

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db, ensureSchema } from "@/lib/db";
 import { tasks, events, meals, users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { CheckCircle2, CalendarClock, Flame } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import ProgressRing from "@/components/dashboard/ProgressRing";
 import TaskPanel from "@/components/tasks/TaskPanel";
@@ -77,21 +78,27 @@ export default async function DashboardPage() {
             <div className="col-lg-6">
               <div className="d-flex flex-wrap gap-3 justify-content-lg-end">
                 <div className="dr-stat-chip dr-stat-chip--indigo">
-                  <span className="dr-stat-chip-icon">✓</span>
+                  <span className="dr-stat-chip-icon">
+                    <CheckCircle2 size={18} strokeWidth={2.25} />
+                  </span>
                   <div>
                     <div className="dr-stat-chip-value">{doneCount}/{allTasks.length}</div>
                     <div className="dr-stat-chip-label">Tasks done</div>
                   </div>
                 </div>
                 <div className="dr-stat-chip dr-stat-chip--marigold">
-                  <span className="dr-stat-chip-icon">◷</span>
+                  <span className="dr-stat-chip-icon">
+                    <CalendarClock size={18} strokeWidth={2.25} />
+                  </span>
                   <div>
                     <div className="dr-stat-chip-value">{todaysEvents.length}</div>
                     <div className="dr-stat-chip-label">On today&apos;s calendar</div>
                   </div>
                 </div>
                 <div className="dr-stat-chip dr-stat-chip--sage">
-                  <span className="dr-stat-chip-icon">🔥</span>
+                  <span className="dr-stat-chip-icon">
+                    <Flame size={18} strokeWidth={2.25} />
+                  </span>
                   <div>
                     <div className="dr-stat-chip-value">{todaysCalories}</div>
                     <div className="dr-stat-chip-label">kcal logged</div>

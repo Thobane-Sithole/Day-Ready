@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import type { Meal } from "@/lib/types";
 
 export default function MealCard({ meal, onDelete }: { meal: Meal; onDelete: (id: string) => void }) {
@@ -26,7 +27,7 @@ export default function MealCard({ meal, onDelete }: { meal: Meal; onDelete: (id
             </div>
           </div>
           <button className="btn btn-sm btn-link text-muted p-0" onClick={() => onDelete(meal.id)} aria-label="Delete meal">
-            ✕
+            <X size={15} />
           </button>
         </div>
         <div className="d-flex gap-3 mt-2 small">

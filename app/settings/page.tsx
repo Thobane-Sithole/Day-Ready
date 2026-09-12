@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db, ensureSchema } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { Settings as SettingsIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import SettingsClient from "@/components/settings/SettingsClient";
 
@@ -20,7 +21,12 @@ export default async function SettingsPage() {
     <>
       <Navbar userName={session.user.name} />
       <div className="container py-4" style={{ maxWidth: 700 }}>
-        <h1 className="h3 mb-1">Settings</h1>
+        <h1 className="h3 mb-1 d-flex align-items-center gap-2">
+          <span className="dr-panel-icon dr-panel-icon--indigo">
+            <SettingsIcon size={18} strokeWidth={2.25} />
+          </span>
+          Settings
+        </h1>
         <p className="text-muted mb-4">Manage your profile, goals, and data.</p>
         <SettingsClient
           initialSettings={{

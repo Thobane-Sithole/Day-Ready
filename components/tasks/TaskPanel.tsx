@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import * as chrono from "chrono-node";
 import toast from "react-hot-toast";
+import { CheckCircle2, X } from "lucide-react";
 import type { Task, Priority } from "@/lib/types";
 
 function CheckIcon() {
@@ -112,10 +113,12 @@ export default function TaskPanel({ initialTasks }: { initialTasks: Task[] }) {
   const doneCount = tasks.filter((t) => t.completed).length;
 
   return (
-    <div className="dr-card dr-card--top-indigo h-100">
+    <div className="dr-card dr-card--top-indigo dr-card--interactive h-100">
       <div className="dr-panel-title">
         <span className="dr-panel-title-left">
-          <span className="dr-panel-icon dr-panel-icon--indigo">✓</span>
+          <span className="dr-panel-icon dr-panel-icon--indigo">
+            <CheckCircle2 size={16} strokeWidth={2.25} />
+          </span>
           Today&apos;s tasks
         </span>
         <span className="text-muted small fw-normal">
@@ -185,7 +188,7 @@ export default function TaskPanel({ initialTasks }: { initialTasks: Task[] }) {
                 onClick={() => removeTask(task.id)}
                 aria-label="Delete task"
               >
-                ✕
+                <X size={15} />
               </button>
             </div>
           ))}

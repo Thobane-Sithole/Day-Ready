@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CheckCircle2, Camera } from "lucide-react";
 import { auth } from "@/lib/auth";
 
 export default async function Home() {
@@ -55,13 +56,15 @@ export default async function Home() {
                 </span>
               </div>
               <ul className="list-unstyled mb-0" style={{ color: "rgba(255,255,255,0.85)" }}>
-                <li className="py-2 border-bottom" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
-                  ✓ Prep standup notes
+                <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <CheckCircle2 size={16} color="#8FE3B8" /> Prep standup notes
                 </li>
-                <li className="py-2 border-bottom" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
-                  ✓ Book dentist — 3:30pm
+                <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <CheckCircle2 size={16} color="#8FE3B8" /> Book dentist — 3:30pm
                 </li>
-                <li className="py-2">📷 Breakfast logged — 410 kcal</li>
+                <li className="py-2 d-flex align-items-center gap-2">
+                  <Camera size={16} color="#F5A623" /> Breakfast logged — 410 kcal
+                </li>
               </ul>
             </div>
           </div>

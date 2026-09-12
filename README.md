@@ -81,6 +81,25 @@ same email, the two are linked automatically (same account, same data). If a
 user only ever signs in with Google, their account has no password set, so
 the password login form won't work for them — that's expected.
 
+## Setting up "Forgot password" emails
+
+The forgot-password flow is fully built and tested (token generation, 1-hour
+expiry, one-time use, safe rejection of Google-only accounts) — it just
+needs somewhere to actually send the email:
+
+1. Sign up at [resend.com](https://resend.com) — free tier, no approval wait,
+   3,000 emails/month
+2. Create an API key at [resend.com/api-keys](https://resend.com/api-keys),
+   set it as `RESEND_API_KEY`
+3. **Important:** Resend's sandbox sender (`onboarding@resend.dev`) can only
+   deliver to the email address of your own Resend account. To send reset
+   emails to real users, [verify a domain](https://resend.com/domains) you
+   own and set `EMAIL_FROM` to an address on it, e.g.
+   `DayReady <noreply@yourdomain.com>`
+4. Without `RESEND_API_KEY` set at all, reset links are printed to the
+   server console instead of emailed — useful for local development, not a
+   substitute for the above in production
+
 ## Deploying to Vercel
 
 1. Push this repo to GitHub (already done if you're reading this from the repo).

@@ -13,6 +13,8 @@ export const users = pgTable("users", {
   carbsGoalG: integer("carbs_goal_g").notNull().default(250),
   fatGoalG: integer("fat_goal_g").notNull().default(70),
   theme: text("theme").notNull().default("light"),
+  resetToken: text("reset_token"),
+  resetTokenExpiresAt: text("reset_token_expires_at"),
   createdAt: text("created_at")
     .notNull()
     .default(sql`now()::text`),
