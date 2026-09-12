@@ -1,0 +1,341 @@
+// ==========================================================================
+// DayReady — custom Bootstrap theme
+// Palette: cool paper background, deep indigo "briefing" band, marigold accent
+// Type: Fraunces (display serif) + Sora (UI sans)
+// ==========================================================================
+
+// ---- Design tokens (override Bootstrap defaults before importing) --------
+$paper:      #F4F6FB;
+$surface:    #FFFFFF;
+$ink:        #12213D;
+$muted-ink:  #6B7690;
+$indigo:     #2B3467;
+$indigo-deep:#1B2247;
+$marigold:   #F5A623;
+$marigold-dark: #D68A0F;
+$sage:       #3E9C6D;
+$rose:       #D65F5F;
+$hairline:   rgba(18, 33, 61, 0.09);
+
+$primary:       $marigold;
+$secondary:     $indigo;
+$success:       $sage;
+$danger:        $rose;
+$warning:       #E8B33D;
+$info:          #3D7FBF;
+$light:         $paper;
+$dark:          $ink;
+
+$body-bg:       $paper;
+$body-color:    $ink;
+
+$font-family-sans-serif: "Sora", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+$headings-font-family: "Fraunces", ui-serif, Georgia, serif;
+$headings-font-weight: 600;
+$headings-color: $ink;
+
+$border-radius:       0.65rem;
+$border-radius-sm:    0.45rem;
+$border-radius-lg:    1rem;
+$border-color:        $hairline;
+
+$card-border-width:   1px;
+$card-border-color:   $hairline;
+$card-box-shadow:     0 1px 2px rgba(18, 33, 61, 0.04);
+
+$btn-border-radius:   999px;
+$btn-border-radius-sm:999px;
+$btn-border-radius-lg:999px;
+$btn-font-weight:     600;
+
+$input-border-radius: 0.5rem;
+$input-border-color:  $hairline;
+$input-focus-border-color: $marigold;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba(245, 166, 35, 0.18);
+
+$progress-border-radius: 999px;
+$progress-height: 0.6rem;
+
+$link-color: $indigo;
+$link-hover-color: $marigold-dark;
+
+$enable-shadows: false;
+
+@import "bootstrap/scss/bootstrap";
+
+// ---- App-level tokens exposed as CSS variables (used outside Bootstrap) --
+:root {
+  --dr-paper: #{$paper};
+  --dr-surface: #{$surface};
+  --dr-ink: #{$ink};
+  --dr-muted-ink: #{$muted-ink};
+  --dr-indigo: #{$indigo};
+  --dr-indigo-deep: #{$indigo-deep};
+  --dr-marigold: #{$marigold};
+  --dr-sage: #{$sage};
+  --dr-rose: #{$rose};
+  --dr-hairline: #{$hairline};
+}
+
+[data-bs-theme="dark"] {
+  --dr-paper: #10162B;
+  --dr-surface: #171E38;
+  --dr-ink: #EDEFF7;
+  --dr-muted-ink: #9BA3BE;
+  --dr-hairline: rgba(237, 239, 247, 0.09);
+
+  body {
+    background-color: var(--dr-paper);
+    color: var(--dr-ink);
+  }
+
+  .dr-card,
+  .card {
+    background-color: var(--dr-surface);
+    border-color: var(--dr-hairline);
+    color: var(--dr-ink);
+  }
+}
+
+// ==========================================================================
+// App components
+// ==========================================================================
+
+body {
+  background: var(--dr-paper);
+}
+
+.dr-briefing-band {
+  background: linear-gradient(160deg, $indigo-deep 0%, $indigo 70%);
+  color: #fff;
+  padding: 2.75rem 0 3.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -6rem;
+    top: -6rem;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba($marigold, 0.35), transparent 65%);
+    pointer-events: none;
+  }
+
+  h1 {
+    color: #fff;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .dr-briefing-date {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+}
+
+.dr-card {
+  background: var(--dr-surface);
+  border: 1px solid var(--dr-hairline);
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.dr-card--interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(18, 33, 61, 0.08);
+}
+
+.dr-panel-title {
+  font-family: $headings-font-family;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Progress ring (SVG-based, animated stroke on mount)
+.dr-progress-ring circle.dr-ring-value {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+// Task rows
+.dr-task {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid var(--dr-hairline);
+  transition: opacity 200ms ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.dr-task--done {
+    opacity: 0.55;
+  }
+
+  .dr-task-title {
+    transition: text-decoration-color 250ms ease, color 250ms ease;
+  }
+
+  &.dr-task--done .dr-task-title {
+    text-decoration: line-through;
+    text-decoration-color: var(--dr-muted-ink);
+    color: var(--dr-muted-ink);
+  }
+}
+
+.dr-check {
+  appearance: none;
+  width: 1.35rem;
+  height: 1.35rem;
+  min-width: 1.35rem;
+  border-radius: 50%;
+  border: 2px solid var(--dr-hairline);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: transparent;
+  transition: border-color 160ms ease, background 160ms ease, transform 120ms ease;
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &.dr-check--done {
+    background: $sage;
+    border-color: $sage;
+  }
+
+  svg {
+    width: 0.8rem;
+    height: 0.8rem;
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+  }
+
+  &.dr-check--done svg {
+    animation: dr-check-draw 260ms ease forwards;
+  }
+}
+
+@keyframes dr-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.dr-priority-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.4rem;
+}
+
+.dr-priority-LOW { background: #8892A6; }
+.dr-priority-MEDIUM { background: $marigold; }
+.dr-priority-HIGH { background: $rose; }
+
+// Nutrition progress bars animate fill on mount
+.dr-nutrient-bar {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--dr-hairline);
+  overflow: hidden;
+
+  .dr-nutrient-fill {
+    height: 100%;
+    border-radius: 999px;
+    width: 0%;
+    transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+// Camera capture modal
+.dr-camera-frame {
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 4 / 3;
+  position: relative;
+}
+
+.dr-camera-shutter {
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 50%;
+  border: 4px solid $paper;
+  background: #fff;
+  box-shadow: 0 0 0 2px $ink;
+  transition: transform 120ms ease;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+// Navbar
+.dr-navbar {
+  background: var(--dr-surface);
+  border-bottom: 1px solid var(--dr-hairline);
+}
+
+.dr-nav-link {
+  font-weight: 600;
+  color: var(--dr-muted-ink);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  transition: background 150ms ease, color 150ms ease;
+
+  &:hover {
+    color: var(--dr-ink);
+    background: var(--dr-hairline);
+  }
+
+  &.active {
+    color: #fff;
+    background: $indigo;
+  }
+}
+
+// Auth pages
+.dr-auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--dr-paper);
+}
+
+.dr-auth-card {
+  width: 100%;
+  max-width: 26rem;
+}
+
+// Empty states
+.dr-empty {
+  text-align: left;
+  padding: 1.5rem 0;
+  color: var(--dr-muted-ink);
+}
+
+// Respect reduced motion
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
