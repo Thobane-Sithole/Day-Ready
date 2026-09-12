@@ -9,10 +9,9 @@ and a camera-based meal calorie tracker powered by Claude's vision model.
   priorities, categories, and a satisfying complete/undo animation.
 - **Calendar & bookings** — month/week/day views (FullCalendar), drag to
   reschedule, resize to adjust duration, and basic overlap detection.
-- **Nutrition camera** — snap or upload a photo of a meal, Google's Gemini
-  vision model (free tier, no credit card required) estimates the foods,
-  portions, and calories/macros, and you can correct the estimate before
-  saving.
+- **Nutrition camera** — snap or upload a photo of a meal, Claude's vision
+  model estimates the foods, portions, and calories/macros, and you can
+  correct the estimate before saving.
 - **Dashboard** — a "briefing" view combining today's tasks, schedule, and
   nutrition totals with an animated progress ring.
 - **Auth** — email/password accounts with hashed passwords and JWT sessions.
@@ -26,7 +25,7 @@ and a camera-based meal calorie tracker powered by Claude's vision model.
 - **Postgres** via Drizzle ORM + `postgres` (postgres-js) — pure JS driver, no
   native bindings, so it deploys cleanly on Vercel's serverless functions
 - Auth.js (NextAuth v5) with the Credentials provider
-- Google Gemini (`@google/genai`) for meal photo analysis — free tier available
+- Claude (`@anthropic-ai/sdk`) for meal photo analysis
 - FullCalendar, react-webcam, chrono-node, react-hot-toast
 
 ## Getting started
@@ -37,7 +36,7 @@ and a camera-based meal calorie tracker powered by Claude's vision model.
 2. **Configure env vars:**
    ```bash
    cp .env.example .env
-   # then fill in DATABASE_URL, NEXTAUTH_SECRET, and GEMINI_API_KEY
+   # then fill in DATABASE_URL, NEXTAUTH_SECRET, and ANTHROPIC_API_KEY
    ```
 3. **Install and run:**
    ```bash
@@ -63,7 +62,7 @@ npm run db:studio   # browse your data in Drizzle Studio
 | `DATABASE_URL` | yes | Postgres connection string (Neon, Supabase, Vercel Postgres, or any Postgres host) |
 | `NEXTAUTH_SECRET` | yes | any long random string — generate with `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | yes | `http://localhost:3000` locally; your deployed URL in production |
-| `GEMINI_API_KEY` | yes, for the camera feature | free, no credit card — get a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
+| `ANTHROPIC_API_KEY` | yes, for the camera feature | pay-as-you-go, separate from any Claude.ai subscription — from [console.anthropic.com](https://console.anthropic.com) |
 
 ## Deploying to Vercel
 

@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
 
 export type FoodItem = {
   name: string;
@@ -39,46 +39,45 @@ Respond with STRICT JSON ONLY, no markdown fences, no commentary, matching exact
 If the image does not clearly show food, return an empty items array, all totals as 0,
 confidence "low", and explain briefly in notes.`;
 
-/**
- * Uses Google's Gemini API (free tier available, no credit card required —
- * see https://aistudio.google.com/apikey) to analyze a food photo and return
- * an estimated calorie/macro breakdown.
- *
- * Swap in Claude's vision API instead by replacing this function's body with
- * an @anthropic-ai/sdk call — the SYSTEM_PROMPT and return shape above are
- * provider-agnostic and don't need to change.
- */
 export async function analyzeFoodImage(base64Image: string, mediaType: string): Promise<FoodAnalysis> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not configured on the server.");
+    throw new Error("ANTHROPIC_API_KEY is not configured on the server.");
   }
 
-  const ai = new GoogleGenAI({ apiKey });
+  const client = new Anthropic({ apiKey });
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: [
+  const response = await client.messages.create({
+    model: "claude-sonnet-4-5",
+    max_tokens: 1024,
+    system: SYSTEM_PROMPT,
+    messages: [
       {
         role: "user",
-        parts: [
-          { inlineData: { mimeType: mediaType, data: base64Image } },
-          { text: "Analyze this meal photo and return the calorie/macro estimate JSON described in your instructions." },
+        content: [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: mediaType as "image/jpeg" | "image/png" | "image/webp",
+              data: base64Image,
+            },
+          },
+          {
+            type: "text",
+            text: "Analyze this meal photo and return the calorie/macro estimate JSON described in your instructions.",
+          },
         ],
       },
     ],
-    config: {
-      systemInstruction: SYSTEM_PROMPT,
-      responseMimeType: "application/json",
-    },
   });
 
-  const text = response.text;
-  if (!text) {
-    throw new Error("No response from the vision model.");
+  const textBlock = response.content.find((b) => b.type === "text");
+  if (!textBlock || textBlock.type !== "text") {
+    throw new Error("No text response from vision model.");
   }
 
-  const cleaned = text.replace(/```json|```/g, "").trim();
+  const cleaned = textBlock.text.replace(/```json|```/g, "").trim();
 
   let parsed: FoodAnalysis;
   try {
