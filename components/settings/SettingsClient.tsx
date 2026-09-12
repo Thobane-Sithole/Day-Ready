@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 import type { UserSettings } from "@/lib/types";
 
 export default function SettingsClient({ initialSettings }: { initialSettings: UserSettings }) {
@@ -141,7 +142,8 @@ export default function SettingsClient({ initialSettings }: { initialSettings: U
       </div>
 
       <div>
-        <button type="submit" className="btn btn-primary" disabled={saving}>
+        <button type="submit" className="btn btn-primary d-flex align-items-center gap-2" disabled={saving}>
+          {saving && <Loader2 size={16} className="dr-spin" />}
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>

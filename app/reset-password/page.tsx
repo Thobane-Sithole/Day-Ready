@@ -4,6 +4,8 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
+import PasswordField from "@/components/auth/PasswordField";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -73,29 +75,15 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label small fw-semibold">New password</label>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={8}
-            required
-            autoFocus
-          />
+          <PasswordField value={password} onChange={setPassword} placeholder="New password" minLength={8} required autoFocus />
           <div className="form-text">At least 8 characters.</div>
         </div>
         <div className="mb-4">
           <label className="form-label small fw-semibold">Confirm password</label>
-          <input
-            type="password"
-            className="form-control"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            minLength={8}
-            required
-          />
+          <PasswordField value={confirm} onChange={setConfirm} placeholder="Confirm password" minLength={8} required />
         </div>
-        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+        <button type="submit" className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" disabled={loading}>
+          {loading && <Loader2 size={16} className="dr-spin" />}
           {loading ? "Saving…" : "Reset password"}
         </button>
       </form>

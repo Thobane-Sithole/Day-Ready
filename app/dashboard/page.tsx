@@ -76,7 +76,7 @@ export default async function DashboardPage() {
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="d-flex flex-wrap gap-3 justify-content-lg-end">
+              <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-end">
                 <div className="dr-stat-chip dr-stat-chip--indigo">
                   <span className="dr-stat-chip-icon">
                     <CheckCircle2 size={18} strokeWidth={2.25} />

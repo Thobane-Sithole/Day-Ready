@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Mail, Loader2 } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -45,16 +46,23 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="form-label small fw-semibold">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoFocus
-                />
+                <div className="dr-input-icon-group">
+                  <span className="dr-input-icon">
+                    <Mail size={16} />
+                  </span>
+                  <input
+                    type="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    required
+                    autoFocus
+                  />
+                </div>
               </div>
-              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              <button type="submit" className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" disabled={loading}>
+                {loading && <Loader2 size={16} className="dr-spin" />}
                 {loading ? "Sending…" : "Send reset link"}
               </button>
             </form>

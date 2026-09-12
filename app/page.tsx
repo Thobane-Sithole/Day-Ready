@@ -46,26 +46,35 @@ export default async function Home() {
 
           <div className="col-lg-5 mt-5 mt-lg-0">
             <div
-              className="dr-card"
+              className="dr-card overflow-hidden p-0"
               style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.14)" }}
             >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <span className="text-white fw-semibold">Today, at a glance</span>
-                <span className="badge rounded-pill" style={{ background: "#F5A623", color: "#12213D" }}>
-                  6 of 9 done
-                </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://images.unsplash.com/photo-1742764915162-20349ae0638f?auto=format&fit=crop&w=800&q=70"
+                alt="A calm morning workspace with coffee and a laptop"
+                className="w-100"
+                style={{ height: 180, objectFit: "cover" }}
+              />
+              <div className="p-4">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <span className="text-white fw-semibold">Today, at a glance</span>
+                  <span className="badge rounded-pill" style={{ background: "#F5A623", color: "#12213D" }}>
+                    6 of 9 done
+                  </span>
+                </div>
+                <ul className="list-unstyled mb-0" style={{ color: "rgba(255,255,255,0.85)" }}>
+                  <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                    <CheckCircle2 size={16} color="#8FE3B8" /> Prep standup notes
+                  </li>
+                  <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                    <CheckCircle2 size={16} color="#8FE3B8" /> Book dentist — 3:30pm
+                  </li>
+                  <li className="py-2 d-flex align-items-center gap-2">
+                    <Camera size={16} color="#F5A623" /> Breakfast logged — 410 kcal
+                  </li>
+                </ul>
               </div>
-              <ul className="list-unstyled mb-0" style={{ color: "rgba(255,255,255,0.85)" }}>
-                <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
-                  <CheckCircle2 size={16} color="#8FE3B8" /> Prep standup notes
-                </li>
-                <li className="py-2 border-bottom d-flex align-items-center gap-2" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
-                  <CheckCircle2 size={16} color="#8FE3B8" /> Book dentist — 3:30pm
-                </li>
-                <li className="py-2 d-flex align-items-center gap-2">
-                  <Camera size={16} color="#F5A623" /> Breakfast logged — 410 kcal
-                </li>
-              </ul>
             </div>
           </div>
         </div>

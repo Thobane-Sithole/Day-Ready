@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
 import interactionPlugin, { type DateClickArg, type EventResizeDoneArg } from "@fullcalendar/interaction";
 import type { EventClickArg, EventDropArg, DatesSetArg } from "@fullcalendar/core";
 import toast from "react-hot-toast";
@@ -28,6 +29,15 @@ const emptyDraft = (start?: Date, end?: Date): EventDraft => ({
 
 export default function CalendarView({ initialEvents }: { initialEvents: Event[] }) {
   const [events, setEvents] = useState<Event[]>(initialEvents);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 576);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const [draft, setDraft] = useState<EventDraft | null>(null);
   const calendarRef = useRef<FullCalendar>(null);
 
@@ -142,12 +152,21 @@ export default function CalendarView({ initialEvents }: { initialEvents: Event[]
       </div>
 
       <FullCalendar
+        key={isMobile ? "mobile" : "desktop"}
         ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{ left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay" }}
+        plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
+        initialView={isMobile ? "listWeek" : "dayGridMonth"}
+        headerToolbar={
+          isMobile
+            ? { left: "prev,next", center: "title", right: "today" }
+            : { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek" }
+        }
         selectable
         editable
+        longPressDelay={300}
+        selectLongPressDelay={300}
+        eventLongPressDelay={300}
+        dayMaxEventRows={isMobile ? 2 : 3}
         events={calendarEvents}
         height="auto"
         select={(info) => openNew(info.start, info.end)}

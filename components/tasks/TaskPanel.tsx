@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import * as chrono from "chrono-node";
 import toast from "react-hot-toast";
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, X, Loader2 } from "lucide-react";
 import type { Task, Priority } from "@/lib/types";
 
 function CheckIcon() {
@@ -133,7 +133,8 @@ export default function TaskPanel({ initialTasks }: { initialTasks: Task[] }) {
           value={quickAdd}
           onChange={(e) => setQuickAdd(e.target.value)}
         />
-        <button className="btn btn-primary btn-sm px-3" disabled={submitting}>
+        <button className="btn btn-primary btn-sm px-3 d-flex align-items-center gap-1" disabled={submitting}>
+          {submitting && <Loader2 size={14} className="dr-spin" />}
           Add
         </button>
       </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export type EventDraft = {
   id?: string;
@@ -144,7 +145,8 @@ export default function EventModal({
                 <button type="button" className="btn btn-outline-secondary" onClick={onClose}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={saving}>
+                <button type="submit" className="btn btn-primary d-flex align-items-center gap-2" disabled={saving}>
+                  {saving && <Loader2 size={16} className="dr-spin" />}
                   {saving ? "Saving…" : "Save booking"}
                 </button>
               </div>

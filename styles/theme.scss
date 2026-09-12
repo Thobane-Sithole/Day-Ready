@@ -429,12 +429,71 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: var(--dr-paper);
+  position: relative;
+  padding: 1.5rem;
+  background-image:
+    linear-gradient(160deg, rgba(27, 34, 71, 0.82) 0%, rgba(43, 52, 103, 0.72) 60%, rgba(18, 33, 61, 0.85) 100%),
+    url("https://images.unsplash.com/photo-1694507482314-a429436d4a0a?auto=format&fit=crop&w=1600&q=70");
+  background-size: cover;
+  background-position: center;
 }
 
 .dr-auth-card {
   width: 100%;
   max-width: 26rem;
+  animation: dr-auth-pop 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes dr-auth-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Icon-decorated auth inputs (email/lock icon inside the field, eye toggle)
+.dr-input-icon-group {
+  position: relative;
+
+  .dr-input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dr-muted-ink);
+    pointer-events: none;
+    display: flex;
+  }
+
+  .dr-input-icon-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    color: var(--dr-muted-ink);
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--dr-ink);
+    }
+  }
+
+  .form-control {
+    padding-left: 2.6rem;
+  }
+
+  .form-control:has(~ .dr-input-icon-toggle) {
+    padding-right: 2.6rem;
+  }
 }
 
 // Empty states
@@ -449,5 +508,79 @@ body {
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+.dr-spin {
+  animation: dr-spin-rotate 800ms linear infinite;
+}
+
+@keyframes dr-spin-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ==========================================================================
+// Mobile responsiveness fixes
+// ==========================================================================
+
+// FullCalendar's default toolbar doesn't wrap gracefully on narrow screens —
+// force it to wrap, shrink buttons, and stack the three toolbar sections.
+.fc {
+  .fc-toolbar {
+    flex-wrap: wrap;
+    row-gap: 0.6rem;
+  }
+
+  .fc-toolbar-title {
+    font-size: 1.1rem;
+  }
+
+  .fc-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .fc-daygrid-day-number,
+  .fc-col-header-cell-cushion {
+    font-size: 0.8rem;
+  }
+
+  .fc-event-title {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .fc-toolbar {
+    justify-content: center !important;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .fc-button {
+    padding: 0.25rem 0.45rem;
+    font-size: 0.72rem;
+  }
+}
+
+// Prevent any wide inner content (calendar, tables) from breaking page layout
+.dr-card {
+  overflow-x: auto;
+}
+
+@media (max-width: 576px) {
+  .dr-briefing-band h1 {
+    font-size: 1.5rem;
+  }
+
+  .dr-stat-chip {
+    min-width: 0;
+    flex: 1 1 calc(50% - 0.5rem);
   }
 }
