@@ -7,9 +7,12 @@ export default function SchedulePanel({ events }: { events: Event[] }) {
   const sorted = [...events].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 
   return (
-    <div className="dr-card h-100">
+    <div className="dr-card dr-card--top-marigold h-100">
       <div className="dr-panel-title">
-        <span>Today&apos;s schedule</span>
+        <span className="dr-panel-title-left">
+          <span className="dr-panel-icon dr-panel-icon--marigold">◷</span>
+          Today&apos;s schedule
+        </span>
         <Link href="/calendar" className="small fw-normal text-decoration-none">
           Open calendar →
         </Link>

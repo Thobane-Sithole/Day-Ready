@@ -43,6 +43,7 @@ export default async function DashboardPage() {
 
   const doneCount = allTasks.filter((t) => t.completed).length;
   const percentDone = allTasks.length > 0 ? (doneCount / allTasks.length) * 100 : 0;
+  const todaysCalories = todaysMeals.reduce((sum, m) => sum + m.totalCalories, 0);
 
   const greetingHour = now.getHours();
   const greeting = greetingHour < 12 ? "Good morning" : greetingHour < 18 ? "Good afternoon" : "Good evening";
@@ -53,35 +54,64 @@ export default async function DashboardPage() {
 
       <div className="dr-briefing-band">
         <div className="container">
-          <p className="dr-briefing-date mb-2">
-            {now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
-          </p>
-          <h1>
-            {greeting}, {session.user.name?.split(" ")[0] || "there"}.
-          </h1>
-          <div className="mt-4">
-            <ProgressRing
-              percent={percentDone}
-              label={`${doneCount} of ${allTasks.length} tasks done`}
-              sublabel={
-                todaysEvents.length > 0
-                  ? `${todaysEvents.length} thing${todaysEvents.length === 1 ? "" : "s"} on today's schedule`
-                  : "Nothing booked today"
-              }
-            />
+          <div className="row align-items-center g-4">
+            <div className="col-lg-6">
+              <p className="dr-briefing-date mb-2">
+                {now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
+              </p>
+              <h1>
+                {greeting}, {session.user.name?.split(" ")[0] || "there"}.
+              </h1>
+              <div className="mt-4">
+                <ProgressRing
+                  percent={percentDone}
+                  label={`${doneCount} of ${allTasks.length} tasks done`}
+                  sublabel={
+                    todaysEvents.length > 0
+                      ? `${todaysEvents.length} thing${todaysEvents.length === 1 ? "" : "s"} on today's schedule`
+                      : "Nothing booked today"
+                  }
+                />
+              </div>
+            </div>
+            <div className="col-lg-6">
+              <div className="d-flex flex-wrap gap-3 justify-content-lg-end">
+                <div className="dr-stat-chip dr-stat-chip--indigo">
+                  <span className="dr-stat-chip-icon">✓</span>
+                  <div>
+                    <div className="dr-stat-chip-value">{doneCount}/{allTasks.length}</div>
+                    <div className="dr-stat-chip-label">Tasks done</div>
+                  </div>
+                </div>
+                <div className="dr-stat-chip dr-stat-chip--marigold">
+                  <span className="dr-stat-chip-icon">◷</span>
+                  <div>
+                    <div className="dr-stat-chip-value">{todaysEvents.length}</div>
+                    <div className="dr-stat-chip-label">On today&apos;s calendar</div>
+                  </div>
+                </div>
+                <div className="dr-stat-chip dr-stat-chip--sage">
+                  <span className="dr-stat-chip-icon">🔥</span>
+                  <div>
+                    <div className="dr-stat-chip-value">{todaysCalories}</div>
+                    <div className="dr-stat-chip-label">kcal logged</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="container py-4">
         <div className="row g-4">
-          <div className="col-lg-4">
+          <div className="col-lg-4" data-aos="fade-up" data-aos-delay="0">
             <TaskPanel initialTasks={allTasks as Task[]} />
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <SchedulePanel events={todaysEvents} />
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-4" data-aos="fade-up" data-aos-delay="200">
             <NutritionPanel
               meals={todaysMeals}
               calorieGoal={user?.dailyCalorieGoal ?? 2000}

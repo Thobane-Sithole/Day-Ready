@@ -64,6 +64,23 @@ npm run db:studio   # browse your data in Drizzle Studio
 | `NEXTAUTH_URL` | yes | `http://localhost:3000` locally; your deployed URL in production |
 | `ANTHROPIC_API_KEY` | yes, for the camera feature | pay-as-you-go, separate from any Claude.ai subscription — from [console.anthropic.com](https://console.anthropic.com) |
 
+### Setting up "Sign in with Google"
+
+Google sign-in is optional but wired up already — it just needs credentials:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Create a project (or use an existing one), then **Create Credentials → OAuth client ID**
+3. Application type: **Web application**
+4. Under **Authorized redirect URIs**, add:
+   - `http://localhost:3000/api/auth/callback/google` (for local dev)
+   - `https://your-domain.vercel.app/api/auth/callback/google` (for production — use your real deployed URL)
+5. Copy the generated **Client ID** and **Client Secret** into `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+
+If a user signs up with email/password and later signs in with Google using the
+same email, the two are linked automatically (same account, same data). If a
+user only ever signs in with Google, their account has no password set, so
+the password login form won't work for them — that's expected.
+
 ## Deploying to Vercel
 
 1. Push this repo to GitHub (already done if you're reading this from the repo).

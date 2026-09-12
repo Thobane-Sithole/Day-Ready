@@ -112,9 +112,12 @@ export default function TaskPanel({ initialTasks }: { initialTasks: Task[] }) {
   const doneCount = tasks.filter((t) => t.completed).length;
 
   return (
-    <div className="dr-card h-100">
+    <div className="dr-card dr-card--top-indigo h-100">
       <div className="dr-panel-title">
-        <span>Today&apos;s tasks</span>
+        <span className="dr-panel-title-left">
+          <span className="dr-panel-icon dr-panel-icon--indigo">✓</span>
+          Today&apos;s tasks
+        </span>
         <span className="text-muted small fw-normal">
           {doneCount}/{tasks.length} done
         </span>

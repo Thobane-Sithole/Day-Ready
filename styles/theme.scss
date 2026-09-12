@@ -106,7 +106,7 @@ body {
 }
 
 .dr-briefing-band {
-  background: linear-gradient(160deg, $indigo-deep 0%, $indigo 70%);
+  background: linear-gradient(160deg, $indigo-deep 0%, $indigo 60%, #3A3F7A 100%);
   color: #fff;
   padding: 2.75rem 0 3.5rem;
   position: relative;
@@ -120,7 +120,19 @@ body {
     width: 22rem;
     height: 22rem;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba($marigold, 0.35), transparent 65%);
+    background: radial-gradient(circle at 30% 30%, rgba($marigold, 0.4), transparent 65%);
+    pointer-events: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -8rem;
+    bottom: -10rem;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 60% 40%, rgba($sage, 0.28), transparent 70%);
     pointer-events: none;
   }
 
@@ -135,6 +147,53 @@ body {
     font-size: 0.95rem;
     letter-spacing: 0.02em;
   }
+}
+
+// Colorful stat chips in the briefing band (echoes a bento/dashboard feel)
+.dr-stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.15rem;
+  border-radius: $border-radius-lg;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  min-width: 9.5rem;
+  transition: transform 200ms ease, background 200ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .dr-stat-chip-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.65rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .dr-stat-chip-value {
+    font-family: $headings-font-family;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  .dr-stat-chip-label {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+  }
+
+  &--indigo .dr-stat-chip-icon { background: rgba(140, 155, 235, 0.35); color: #C9D2FF; }
+  &--marigold .dr-stat-chip-icon { background: rgba($marigold, 0.3); color: $marigold; }
+  &--sage .dr-stat-chip-icon { background: rgba($sage, 0.3); color: #8FE3B8; }
 }
 
 .dr-card {
@@ -158,7 +217,33 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.6rem;
+
+  .dr-panel-title-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
 }
+
+.dr-panel-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.6rem;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+
+  &--indigo { background: rgba($indigo, 0.12); color: $indigo; }
+  &--marigold { background: rgba($marigold, 0.16); color: $marigold-dark; }
+  &--sage { background: rgba($sage, 0.14); color: darken($sage, 8%); }
+}
+
+// Colored top-accent bar per card type, for quick visual scanning
+.dr-card--top-indigo { border-top: 3px solid $indigo; }
+.dr-card--top-marigold { border-top: 3px solid $marigold; }
+.dr-card--top-sage { border-top: 3px solid $sage; }
 
 // Progress ring (SVG-based, animated stroke on mount)
 .dr-progress-ring circle.dr-ring-value {

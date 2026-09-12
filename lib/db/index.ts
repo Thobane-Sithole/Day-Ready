@@ -38,7 +38,7 @@ const DDL = `
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
+    password_hash TEXT,
     timezone TEXT NOT NULL DEFAULT 'UTC',
     daily_calorie_goal INTEGER NOT NULL DEFAULT 2000,
     protein_goal_g INTEGER NOT NULL DEFAULT 120,
@@ -47,6 +47,10 @@ const DDL = `
     theme TEXT NOT NULL DEFAULT 'light',
     created_at TEXT NOT NULL DEFAULT now()::text
   );
+
+  -- Widen existing deployments where password_hash was NOT NULL, so
+  -- Google-only accounts (no password) can be created.
+  ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
 
   CREATE TABLE IF NOT EXISTS tasks (
     id TEXT PRIMARY KEY,

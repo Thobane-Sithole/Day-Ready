@@ -6,7 +6,7 @@ export const users = pgTable("users", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"), // null for accounts created via Google sign-in
   timezone: text("timezone").notNull().default("UTC"),
   dailyCalorieGoal: integer("daily_calorie_goal").notNull().default(2000),
   proteinGoalG: integer("protein_goal_g").notNull().default(120),
